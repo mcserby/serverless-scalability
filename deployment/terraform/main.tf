@@ -35,7 +35,7 @@ resource "google_pubsub_topic" "simple-etl-trigger-topic" {
 
 resource "google_cloud_scheduler_job" "simple_etl_trigger_scheduler_job" {
   name        = "simple-etl-trigger-scheduler-job"
-  description = "triggers category etl job from SIM to PIM"
+  description = "triggers simple etl job"
   schedule    = var.simple_etl_schedule
 
   pubsub_target {
