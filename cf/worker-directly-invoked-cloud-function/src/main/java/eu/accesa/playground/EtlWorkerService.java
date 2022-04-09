@@ -1,20 +1,22 @@
 package eu.accesa.playground;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.cloud.functions.BackgroundFunction;
 import com.google.cloud.functions.Context;
 
+import java.io.IOException;
 import java.net.http.HttpClient;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Base64;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SimpleEtlService implements BackgroundFunction<PubSubMessage> {
+public class EtlWorkerService implements BackgroundFunction<PubSubMessage> {
 
-    private static final Logger logger = Logger.getLogger(SimpleEtlService.class.getName());
+    private static final Logger logger = Logger.getLogger(EtlWorkerService.class.getName());
 
     private static final HttpClient httpClient = initHttpClient();
 
@@ -36,18 +38,22 @@ public class SimpleEtlService implements BackgroundFunction<PubSubMessage> {
     @Override
     public void accept(PubSubMessage message, Context context) {
         try {
-            String decodedMessage = new String(Base64.getDecoder().decode(message.data), StandardCharsets.UTF_8);
-            logger.info("decodedMessage: " + decodedMessage);
-            triggerSimpleEtl();
+            List<Integer> workloads = extractData(message);
+            logger.info("processing workloads: " + workloads);
+            int workloadDuration = Integer.parseInt(System.getenv("WORKLOAD_DURATION"));
+            Worker worker = new Worker(httpClient, objectMapper, workloadDuration);
+            worker.batchEtl(workloads);
+            logger.info("processing complete.");
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "SIMPLE ETL job cannot be performed. " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "ETL WORKER job cannot be performed. " + e.getMessage(), e);
         }
     }
 
-    private void triggerSimpleEtl() throws InterruptedException {
-        int workloadDuration = Integer.parseInt(System.getenv("WORKLOAD_DURATION"));
-        SimpleEtlServiceWorker etlService = new SimpleEtlServiceWorker(httpClient, objectMapper, workloadDuration);
-        etlService.etl();
+    private List<Integer> extractData(PubSubMessage message) throws IOException {
+        if (message.data == null) {
+            throw new RuntimeException("data missing from PUB SUB message");
+        }
+        return objectMapper.readValue(Base64.getDecoder().decode(message.data), new TypeReference<>() {});
     }
 
 }

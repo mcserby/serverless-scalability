@@ -5,16 +5,15 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.cloud.functions.BackgroundFunction;
 import com.google.cloud.functions.Context;
 
+import java.io.IOException;
 import java.net.http.HttpClient;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SimpleEtlService implements BackgroundFunction<PubSubMessage> {
+public class DirectCallEtlManager implements BackgroundFunction<PubSubMessage> {
 
-    private static final Logger logger = Logger.getLogger(SimpleEtlService.class.getName());
+    private static final Logger logger = Logger.getLogger(DirectCallEtlManager.class.getName());
 
     private static final HttpClient httpClient = initHttpClient();
 
@@ -36,18 +35,20 @@ public class SimpleEtlService implements BackgroundFunction<PubSubMessage> {
     @Override
     public void accept(PubSubMessage message, Context context) {
         try {
-            String decodedMessage = new String(Base64.getDecoder().decode(message.data), StandardCharsets.UTF_8);
-            logger.info("decodedMessage: " + decodedMessage);
-            triggerSimpleEtl();
+            directTriggerEtlWorkloads();
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "SIMPLE ETL job cannot be performed. " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "ETL job cannot be performed. " + e.getMessage(), e);
         }
     }
 
-    private void triggerSimpleEtl() throws InterruptedException {
-        int workloadDuration = Integer.parseInt(System.getenv("WORKLOAD_DURATION"));
-        SimpleEtlServiceWorker etlService = new SimpleEtlServiceWorker(httpClient, objectMapper, workloadDuration);
-        etlService.etl();
+    private void directTriggerEtlWorkloads() throws IOException, InterruptedException {
+        String projectId = System.getenv("PROJECT_ID");
+        String topicId = System.getenv("ETL_WORKER_TOPIC");
+        int workerBatchSize = Integer.parseInt(System.getenv("WORKER_BATCH_SIZE"));
+        int maxWorkloads = Integer.parseInt(System.getenv("MAX_WORKLOADS"));
+        EtlWorkloadTriggerService etlWorkloadTriggerService =
+                new EtlWorkloadTriggerService(projectId, topicId, workerBatchSize, maxWorkloads, objectMapper);
+        etlWorkloadTriggerService.triggerEtlWorkloads();
     }
 
 }
