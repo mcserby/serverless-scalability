@@ -3,7 +3,7 @@ region  = "europe-west3"
 credentials = "c:/credentials/google/sa.json"
 
 cloud_function_bucket = "playground-cf"
-cloud_functions_version = "0.0.9"
+cloud_functions_version = "0.1.0"
 
 # simple ETL
 simple_etl_trigger_topic = "simple-etl-trigger-topic"
@@ -26,3 +26,6 @@ etl_pulling_worker_topic = "etl_pulling_worker_topic"
 manager_workload_queue_trigger_etl_schedule = "0 * * * *"
 worker_trigger_etl_schedule = "*/10 * * * *"
 pulling_worker_batch_size = 2
+pulling_workload_duration = 5
+pulling_max_workloads = 50
+

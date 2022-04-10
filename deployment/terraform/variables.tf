@@ -25,3 +25,6 @@ variable "etl_pulling_worker_topic" {}
 variable "manager_workload_queue_trigger_etl_schedule" {}
 variable "worker_trigger_etl_schedule" {}
 variable "pulling_worker_batch_size" {}
+variable "pulling_workload_duration" {}
+variable "pulling_max_workloads" {}
+

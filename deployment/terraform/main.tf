@@ -267,7 +267,7 @@ resource "google_cloudfunctions_function" "manager-workload-queue-cloud-function
     PROJECT_ID = var.project
     WORKER_BATCH_SIZE = var.manager_batch_size
     ETL_WORKER_TOPIC = var.etl_pulling_worker_topic
-    MAX_WORKLOADS = var.max_workloads
+    MAX_WORKLOADS = var.pulling_max_workloads
   }
 }
 
@@ -289,7 +289,7 @@ resource "google_cloudfunctions_function" "etl-pulling-worker-cloud-function" {
   }
   environment_variables = {
     PROJECT_ID = var.project
-    WORKLOAD_DURATION = var.directly_triggered_workload_duration
+    WORKLOAD_DURATION = var.pulling_workload_duration
     ETL_PULLING_WORKER_SUBSCRIPTION = google_pubsub_subscription.etl-worker-subscription.name
     BATCH_SIZE = var.pulling_worker_batch_size
   }
