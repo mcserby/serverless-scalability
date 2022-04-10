@@ -11,9 +11,9 @@ import java.time.Duration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DirectCallEtlManager implements BackgroundFunction<PubSubMessage> {
+public class EtlManager implements BackgroundFunction<PubSubMessage> {
 
-    private static final Logger logger = Logger.getLogger(DirectCallEtlManager.class.getName());
+    private static final Logger logger = Logger.getLogger(EtlManager.class.getName());
 
     private static final HttpClient httpClient = initHttpClient();
 

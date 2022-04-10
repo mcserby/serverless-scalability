@@ -1,10 +1,10 @@
 $version=$args[0]
 # manager
-cd ../../cf/manager-direct-call-worker-cloud-function
+cd ../../cf/manager-cloud-function
 $zipResult=jar -cvMf manager-direct-call-worker-cloud-function-$version.zip src pom.xml
 Write-Output $zipResult
 cd ../../
-$mvResult=mv ./cf/manager-direct-call-worker-cloud-function/manager-direct-call-worker-cloud-function-$version.zip .
+$mvResult=mv ./cf/manager-cloud-function/manager-direct-call-worker-cloud-function-$version.zip .
 $copyResult=gsutil cp manager-direct-call-worker-cloud-function-$version.zip gs://playground-cf/
 Write-Output $copyResult
 Remove-Item manager-direct-call-worker-cloud-function-$version.zip
@@ -18,4 +18,3 @@ $mvResult=mv ./cf/worker-directly-invoked-cloud-function/etl-worker-cloud-functi
 $copyResult=gsutil cp etl-worker-cloud-function-$version.zip gs://playground-cf/
 Write-Output $copyResult
 Remove-Item etl-worker-cloud-function-$version.zip
-
