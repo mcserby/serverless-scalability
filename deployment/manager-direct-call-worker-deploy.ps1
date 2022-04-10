@@ -18,4 +18,3 @@ $mvResult=mv ./cf/worker-directly-invoked-cloud-function/etl-worker-cloud-functi
 $copyResult=gsutil cp etl-worker-cloud-function-$version.zip gs://playground-cf/
 Write-Output $copyResult
 Remove-Item etl-worker-cloud-function-$version.zip
-

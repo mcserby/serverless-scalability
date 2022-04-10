@@ -132,7 +132,7 @@ resource "google_cloudfunctions_function" "manager-direct-call-cloud-function" {
     PROJECT_ID = var.project
     WORKER_BATCH_SIZE = var.worker_batch_size
     ETL_WORKER_TOPIC = var.etl_worker_topic
-    MAX_WORKLOADS = var.max_workloads
+    MAX_WORKLOADS = var.direct_trigger_max_workloads
   }
 }
 
