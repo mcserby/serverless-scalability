@@ -3,7 +3,7 @@ region  = "europe-west3"
 credentials = "c:/credentials/google/sa.json"
 
 cloud_function_bucket = "playground-cf"
-cloud_functions_version = "0.1.0"
+cloud_functions_version = "0.1.0-S3"
 
 # simple ETL
 simple_etl_trigger_topic = "simple-etl-trigger-topic"
