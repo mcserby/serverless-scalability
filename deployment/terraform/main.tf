@@ -66,6 +66,9 @@ resource "google_cloudfunctions_function" "simple-etl-cloud-function" {
     PROJECT_ID = var.project
     WORKLOAD_DURATION = var.simple_etl_workload_duration
   }
+  timeouts {
+    create = "10m"
+  }
 }
 
 # manager direct call worker scenario
