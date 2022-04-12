@@ -134,6 +134,9 @@ resource "google_cloudfunctions_function" "manager-direct-call-cloud-function" {
     ETL_WORKER_TOPIC = var.etl_worker_topic
     MAX_WORKLOADS = var.direct_trigger_max_workloads
   }
+  timeouts {
+    create = "10m"
+  }
 }
 
 resource "google_cloudfunctions_function" "etl-worker-cloud-function" {
@@ -155,5 +158,8 @@ resource "google_cloudfunctions_function" "etl-worker-cloud-function" {
   environment_variables = {
     PROJECT_ID = var.project
     WORKLOAD_DURATION = var.directly_triggered_workload_duration
+  }
+  timeouts {
+    create = "10m"
   }
 }
