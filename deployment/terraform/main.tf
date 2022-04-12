@@ -66,6 +66,9 @@ resource "google_cloudfunctions_function" "simple-etl-cloud-function" {
     PROJECT_ID = var.project
     WORKLOAD_DURATION = var.simple_etl_workload_duration
   }
+  timeouts {
+    create = "60m"
+  }
 }
 
 # manager direct call worker scenario
@@ -134,6 +137,9 @@ resource "google_cloudfunctions_function" "manager-direct-call-cloud-function" {
     ETL_WORKER_TOPIC = var.etl_worker_topic
     MAX_WORKLOADS = var.direct_trigger_max_workloads
   }
+  timeouts {
+    create = "60m"
+  }
 }
 
 resource "google_cloudfunctions_function" "etl-worker-cloud-function" {
@@ -156,10 +162,13 @@ resource "google_cloudfunctions_function" "etl-worker-cloud-function" {
     PROJECT_ID = var.project
     WORKLOAD_DURATION = var.directly_triggered_workload_duration
   }
+  timeouts {
+    create = "60m"
+  }
 }
 
 
-# manager with workload queue resources
+# manager with workload queue resources // scenario 3
 
 resource "null_resource" "archive-workload-queue-cloud-functions" {
   triggers = {
@@ -269,6 +278,9 @@ resource "google_cloudfunctions_function" "manager-workload-queue-cloud-function
     ETL_WORKER_TOPIC = var.etl_pulling_worker_topic
     MAX_WORKLOADS = var.pulling_max_workloads
   }
+  timeouts {
+    create = "60m"
+  }
 }
 
 resource "google_cloudfunctions_function" "etl-pulling-worker-cloud-function" {
@@ -292,6 +304,9 @@ resource "google_cloudfunctions_function" "etl-pulling-worker-cloud-function" {
     WORKLOAD_DURATION = var.pulling_workload_duration
     ETL_PULLING_WORKER_SUBSCRIPTION = google_pubsub_subscription.etl-worker-subscription.name
     BATCH_SIZE = var.pulling_worker_batch_size
+  }
+  timeouts {
+    create = "60m"
   }
 }
 
