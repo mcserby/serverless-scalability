@@ -17,12 +17,3 @@ manager_direct_call_etl_schedule = "0 * * * *"
 worker_batch_size = 5
 direct_trigger_max_workloads = 50
 directly_triggered_workload_duration = 5
-
-# manager with working pub sub QUEUE and PULL
-manager_workload_queue_trigger_topic = "manager_workload_queue_trigger_topic"
-manager_batch_size = 5
-worker_trigger_topic = "worker_trigger_topic"
-etl_pulling_worker_topic = "etl_pulling_worker_topic"
-manager_workload_queue_trigger_etl_schedule = "0 * * * *"
-worker_trigger_etl_schedule = "*/10 * * * *"
-pulling_worker_batch_size = 2
